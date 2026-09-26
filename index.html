@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Weather Mood — Responsive Weather App</title>
+  <meta name="description" content="Search any city, get temperature, humidity, wind, weather mood, raw + formatted JSON." />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="bg" aria-hidden="true"></div>
+  <main class="container">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">Frontend + WeatherAPI + Vercel</p>
+        <h1>Weather Mood</h1>
+        <p class="sub">Search a city or tap a popular city. We show <strong>temp · humidity · wind</strong>, a computed <strong>mood</strong>, and both <strong>raw + formatted JSON</strong>.</p>
+      </div>
+      <div class="api-badge" title="API contract">
+        <code>GET /api/weather?q=city</code>
+        <span id="apiMode" class="pill">proxy: /api/weather</span>
+      </div>
+    </header>
+
+    <section class="card search-card" aria-label="City search">
+      <form id="searchForm" autocomplete="off">
+        <label class="sr" for="cityInput">City name</label>
+        <input id="cityInput" type="text" placeholder="Enter city name… e.g. London" minlength="1" maxlength="100" />
+        <button id="searchBtn" type="submit">Get weather</button>
+      </form>
+      <div class="chips-label">10 popular cities:</div>
+      <div id="chips" class="chips" role="list"></div>
+      <p class="hint">Tip: press <kbd>Enter</kbd> to search. Clicking a chip fetches instantly.</p>
+    </section>
+
+    <section id="status" class="status" aria-live="polite" hidden></section>
+
+    <section id="result" class="grid" hidden>
+      <article class="card current">
+        <div class="current-top">
+          <div>
+            <h2 id="locName">—</h2>
+            <p id="locSub" class="muted">—</p>
+            <p id="locTime" class="muted small">—</p>
+          </div>
+          <div class="cond">
+            <img id="condIcon" alt="" width="64" height="64" />
+            <span id="condText">—</span>
+          </div>
+        </div>
+        <div class="metrics">
+          <div class="metric"><span class="k">Temperature</span><span class="v" id="mTemp">—</span><span class="u" id="mTempSub">—</span></div>
+          <div class="metric"><span class="k">Humidity</span><span class="v" id="mHum">—</span><span class="u">relative humidity</span></div>
+          <div class="metric"><span class="k">Wind speed</span><span class="v" id="mWind">—</span><span class="u" id="mWindSub">—</span></div>
+        </div>
+        <div class="mood-row">
+          <span class="k">Weather mood</span>
+          <span id="moodBadge" class="mood">—</span>
+        </div>
+        <details class="thresholds">
+          <summary>Mood thresholds (how this is computed)</summary>
+          <ol>
+            <li><strong>Windy</strong> if <code>wind_kph &gt; 30</code></li>
+            <li><strong>Uncomfortable</strong> if <code>humidity ≥ 80%</code> OR (<code>temp_c ≥ 28</code> AND <code>humidity ≥ 70%</code>)</li>
+            <li><strong>Hot</strong> if <code>temp_c ≥ 30</code></li>
+            <li><strong>Cold</strong> if <code>temp_c ≤ 10</code></li>
+            <li><strong>Pleasant</strong> otherwise</li>
+          </ol>
+          <p class="muted small">Evaluated in order; first match wins.</p>
+        </details>
+      </article>
+
+      <article class="card json-card">
+        <div class="json-head">
+          <h3>Raw JSON</h3>
+          <button class="ghost" data-copy="rawJson" type="button">Copy</button>
+        </div>
+        <pre id="rawJson" class="code raw">—</pre>
+      </article>
+
+      <article class="card json-card">
+        <div class="json-head">
+          <h3>Formatted JSON (syntax-highlighted)</h3>
+          <button class="ghost" data-copy="prettyJson" type="button">Copy</button>
+        </div>
+        <pre id="prettyJson" class="code pretty" aria-label="Formatted JSON">—</pre>
+      </article>
+    </section>
+
+    <footer class="foot muted small">
+      <span>Data: <a href="https://www.weatherapi.com/" target="_blank" rel="noreferrer">WeatherAPI.com</a> via <code>/api/weather?q=city</code> proxy (key in server env, never hardcoded).</span>
+      <span>Deploy: Vercel · <code>WEATHER_API_KEY</code> server env · static frontend.</span>
+    </footer>
+  </main>
+  <script src="./app.js" type="module"></script>
+</body>
+</html>

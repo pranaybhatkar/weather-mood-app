@@ -1,0 +1,12 @@
+{
+  "name": "weather-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Responsive weather web app (frontend-only + Vercel serverless proxy)",
+  "type": "module",
+  "scripts": {
+    "dev": "npx serve . -l 3000",
+    "deploy": "vercel --prod",
+    "deploy:preview": "vercel"
+  }
+}
