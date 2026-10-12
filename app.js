@@ -75,7 +75,11 @@ async function fetchWeather(city) {
   document.querySelectorAll(".chip").forEach(c => c.classList.toggle("active", c.dataset.city.toLowerCase() === q.toLowerCase()));
 
   const urls = [`/api/weather?q=${encodeURIComponent(q)}`];
-  // Fallback: direct WeatherAPI call (exposes key — only for local dev without proxy)
+  // Fallback: pinned Vercel proxy, so static-only hosts (e.g. GitHub Pages,
+  // which can't run serverless functions) still work. Key stays server-side;
+  // this proxy sends `Access-Control-Allow-Origin: *`. Tried only if same-origin fails.
+  urls.push(`https://weather-mood-app-theta.vercel.app/api/weather?q=${encodeURIComponent(q)}`);
+  // Last resort: direct WeatherAPI call (exposes key — only for local dev without proxy)
   if (DIRECT_KEY) urls.push(`https://api.weatherapi.com/v1/current.json?key=${encodeURIComponent(DIRECT_KEY)}&q=${encodeURIComponent(q)}&aqi=no`);
 
   let data = null, lastErr = null, usedMode = urls[0];
@@ -97,7 +101,7 @@ async function fetchWeather(city) {
     return;
   }
 
-  apiModeEl.textContent = usedMode.startsWith("/api") ? "proxy: /api/weather" : "direct: weatherapi.com";
+  apiModeEl.textContent = usedMode.includes("/api/weather") ? "proxy: /api/weather" : "direct: weatherapi.com";
   render(data);
   setStatus("", "");
 }
