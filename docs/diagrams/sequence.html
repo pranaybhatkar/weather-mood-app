@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Weather Mood — Weather Request Sequence</title>
+<style>
+:root, [data-theme="dark"]{--bg:#0b1220;--card:#121c31;--line:#ffffff2e;--txt:#eef3ff;--muted:#9fb0cc;--acc:#5aa2ff;--acc2:#7c6cff;--ok:#34d399;--err:#fb7185;--edge:#8ea2c8;--pill:#ffffff14}
+[data-theme="light"]{--bg:#f4f6fb;--card:#ffffff;--line:#0b12202e;--txt:#0b1220;--muted:#4b5b76;--acc:#2563eb;--acc2:#6d28d9;--ok:#047857;--err:#be123c;--edge:#4b5b76;--pill:#0b122012}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+.wrap{max-width:1060px;margin:0 auto;padding:28px 18px 56px}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+h1{margin:0;font-size:clamp(22px,3.4vw,32px)}p.sub{color:var(--muted);max-width:70ch}
+button.tgl{background:var(--pill);border:1px solid var(--line);color:var(--txt);border-radius:999px;padding:8px 14px;cursor:pointer;font-weight:600}
+figure.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin:18px 0}
+svg{width:100%;height:auto;display:block}
+.p{fill:var(--acc);font-size:13px;font-weight:700}.pb{fill:var(--card);stroke:var(--acc);stroke-width:1.6}
+.ln{stroke:var(--edge);stroke-width:1.4;stroke-dasharray:5 5}
+.act{fill:var(--acc);opacity:.35}.act2{fill:var(--acc2);opacity:.35}
+.msg{stroke:var(--edge);stroke-width:1.8}.msgE{stroke:var(--err);stroke-width:1.8}
+.ml{fill:var(--txt);font-size:12px;font-weight:600}.mlb{fill:var(--bg);stroke:var(--line)}
+.mle{fill:var(--err);font-size:12px;font-weight:700}
+.arr{fill:var(--edge)}.arrE{fill:var(--err)}
+.alt{fill:none;stroke:var(--err);stroke-width:1.4;stroke-dasharray:7 5}
+.altt{fill:var(--err);font-size:12px;font-weight:700}
+.st{fill:var(--muted);font-size:11.5px}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:14px}
+.note{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:13.5px;color:var(--muted)}
+.note b{color:var(--txt)}code{background:var(--pill);padding:1px 6px;border-radius:6px;font-size:12.5px}
+footer{color:var(--muted);font-size:12.5px;margin-top:18px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="top">
+<div><h1>Weather Request — Sequence</h1>
+<p class="sub">Happy path for <code>?q=London</code> plus the invalid-city error branch. Every label maps to real code in <code>app.js</code> (<code>fetchWeather</code>, <code>moodFor</code>, <code>render</code>) and <code>api/weather.js</code>.</p></div>
+<button class="tgl" id="tgl" type="button">☾ / ☀ theme</button>
+</div>
+<figure class="card">
+<svg viewBox="0 0 980 660" role="img" aria-label="Sequence diagram">
+<defs>
+<marker id="m" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9 z" class="arr"/></marker>
+<marker id="me" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9 z" class="arrE"/></marker>
+</defs>
+<!-- participants -->
+<g><rect class="pb" x="30" y="14" width="150" height="40" rx="10"/><text class="p" x="105" y="39" text-anchor="middle">User</text><line class="ln" x1="105" y1="54" x2="105" y2="640"/></g>
+<g><rect class="pb" x="290" y="14" width="170" height="40" rx="10"/><text class="p" x="375" y="39" text-anchor="middle">Browser (app.js)</text><line class="ln" x1="375" y1="54" x2="375" y2="640"/></g>
+<g><rect class="pb" x="560" y="14" width="170" height="40" rx="10"/><text class="p" x="645" y="39" text-anchor="middle">Vercel proxy</text><line class="ln" x1="645" y1="54" x2="645" y2="640"/></g>
+<g><rect class="pb" x="800" y="14" width="150" height="40" rx="10"/><text class="p" x="875" y="39" text-anchor="middle">WeatherAPI</text><line class="ln" x1="875" y1="54" x2="875" y2="640"/></g>
+<!-- activations -->
+<rect class="act" x="369" y="120" width="12" height="440"/>
+<rect class="act2" x="639" y="220" width="12" height="180"/>
+<!-- messages -->
+<g><line class="msg" x1="105" y1="110" x2="369" y2="110" marker-end="url(#m)"/><rect class="mlb" x="130" y="88" width="215" height="20" rx="10"/><text class="ml" x="138" y="102">1 · type city / tap chip</text></g>
+<g><line class="msg" x1="375" y1="150" x2="381" y2="150" marker-end="url(#m)"/><rect class="mlb" x="392" y="128" width="250" height="20" rx="10"/><text class="ml" x="400" y="142">2 · self: loading spinner, disable btn</text></g>
+<g><line class="msg" x1="381" y1="200" x2="639" y2="200" marker-end="url(#m)"/><rect class="mlb" x="400" y="178" width="225" height="20" rx="10"/><text class="ml" x="408" y="192">3 · GET /api/weather?q=London</text></g>
+<g><line class="msg" x1="645" y1="245" x2="651" y2="245" marker-end="url(#m)"/><rect class="mlb" x="560" y="223" width="60" height="20" rx="10"/><text class="ml" x="568" y="237">4 · self</text></g>
+<text class="st" x="660" y="241">read WEATHER_API_KEY</text>
+<g><line class="msg" x1="651" y1="290" x2="869" y2="290" marker-end="url(#m)"/><rect class="mlb" x="560" y="268" width="300" height="20" rx="10"/><text class="ml" x="568" y="282">5 · GET current.json?key=●●●&amp;q=London&amp;aqi=no</text></g>
+<g><line class="msg" x1="869" y1="340" x2="651" y2="340" marker-end="url(#m)"/><rect class="mlb" x="660" y="318" width="195" height="20" rx="10"/><text class="ml" x="668" y="332">6 · 200 {location, current}</text></g>
+<g><line class="msg" x1="639" y1="390" x2="381" y2="390" marker-end="url(#m)"/><rect class="mlb" x="392" y="368" width="235" height="20" rx="10"/><text class="ml" x="400" y="382">7 · 200 JSON (s-maxage=300)</text></g>
+<g><line class="msg" x1="375" y1="440" x2="381" y2="440" marker-end="url(#m)"/><rect class="mlb" x="392" y="418" width="270" height="20" rx="10"/><text class="ml" x="400" y="432">8 · self: moodFor(t,h,w) → render()</text></g>
+<g><line class="msg" x1="369" y1="500" x2="111" y2="500" marker-end="url(#m)"/><rect class="mlb" x="120" y="478" width="240" height="20" rx="10"/><text class="ml" x="128" y="492">9 · cards + mood + raw/pretty JSON</text></g>
+<!-- alt: error branch -->
+<rect class="alt" x="30" y="530" width="920" height="96" rx="12"/>
+<text class="altt" x="44" y="552">alt · unknown city (verified live: 400 “No matching location found.”)</text>
+<line class="msgE" x1="869" y1="580" x2="651" y2="580" marker-end="url(#me)"/><rect class="mlb" x="660" y="566" width="110" height="20" rx="10"/><text class="mle" x="668" y="580">400 error JSON</text>
+<line class="msgE" x1="639" y1="606" x2="111" y2="606" marker-end="url(#me)"/><rect class="mlb" x="250" y="592" width="240" height="20" rx="10"/><text class="mle" x="258" y="606">passthrough → #status error</text>
+</svg>
+</figure>
+<div class="notes">
+<div class="note"><b>Key moment (msg 5).</b> The only place the secret exists on the wire is proxy → WeatherAPI. Browser → proxy carries just <code>q</code>.</div>
+<div class="note"><b>Mood (msg 8).</b> Priority order: Windy → Uncomfortable → Hot → Cold → Pleasant. Same rules rendered in the app's <code>&lt;details&gt;</code> block.</div>
+<div class="note"><b>Fallback.</b> If the proxy is unreachable in local dev, <code>app.js</code> tries a direct WeatherAPI call only when <code>VITE_WEATHER_API_KEY</code> is injected.</div>
+</div>
+<footer>Hand-authored (archify CLI unavailable — skill install ships empty bin/schemas; see repo). Verified live: <code>/api/weather?q=London → 200</code>, bad city → <code>400</code>.</footer>
+</div>
+<script>document.getElementById('tgl').onclick=()=>{const h=document.documentElement;h.dataset.theme=h.dataset.theme==='dark'?'light':'dark'};</script>
+</body>
+</html>

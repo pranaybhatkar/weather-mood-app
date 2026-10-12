@@ -4,6 +4,7 @@ A responsive, frontend-only weather app with a live **weather mood engine**, raw
 
 **🔗 Live demo:** https://weather-mood-app-theta.vercel.app
 **📦 Source:** https://github.com/pranaybhatkar/weather-mood-app
+**📐 Diagrams:** [`docs/diagrams/architecture.html`](docs/diagrams/architecture.html) (system map) · [`docs/diagrams/sequence.html`](docs/diagrams/sequence.html) (request lifecycle)
 
 ---
 
